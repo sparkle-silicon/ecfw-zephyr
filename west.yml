@@ -25,7 +25,8 @@ manifest:
       repo-path: zephyr.git
       path: ecfwwork/zephyr_fork
       remote: zephyrproject
-      revision: v3.6.0
+      # 原官方 v3.6.0；改用 spksilicon-ae103 分支（含 ae103 SoC 移植）
+      revision: spksilicon-ae103
       clone-depth: 1
       west-commands: scripts/west-commands.yml
 
