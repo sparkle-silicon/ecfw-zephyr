@@ -77,3 +77,6 @@ obj/*
 .project
 .pydevproject
 .settings/*
+
+# Claude Code local settings
+**/.claude/settings.local.json

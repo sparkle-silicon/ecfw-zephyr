@@ -14,7 +14,8 @@ manifest:
 
   remotes:
     - name: zephyrproject
-      url-base: https://github.com/zephyrproject-rtos
+      # 原官方源（私有化前）: https://github.com/zephyrproject-rtos
+      url-base: git@github.com:sparkle-silicon
 
   # The list of dependencies
   #
