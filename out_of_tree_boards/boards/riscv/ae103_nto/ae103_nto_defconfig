@@ -1,0 +1,17 @@
+# Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
+CONFIG_SOC_SERIES_SPK_AE103X=y
+CONFIG_SOC_AE103_NTO=y
+CONFIG_BOARD_SPK32_AE103_NTO=y
+
+# Milestone 1: run from SRAM. Switch to XIP (flash @ 0x80000) once the
+# flash controller / boot flow is in place.
+CONFIG_XIP=n
+
+# Milestone 1: no SPK TIMER driver yet; disable sys_clock so the kernel
+# skeleton links. Re-enable together with the ae103 timer driver.
+CONFIG_SYS_CLOCK_EXISTS=n
+
+# AE103 hardware timer driver (reference peripheral driver template).
+CONFIG_AE103_TIMER=y

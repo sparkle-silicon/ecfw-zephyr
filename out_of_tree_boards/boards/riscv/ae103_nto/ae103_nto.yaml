@@ -1,0 +1,24 @@
+# Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
+identifier: ae103_nto
+name: SPK32 AE103 NTO
+type: mcu
+arch: riscv
+toolchain:
+  - zephyr
+  - nuclei
+ram: 32
+flash: 256
+supported:
+  - gpio
+  - i2c
+  - pwm
+  - watchdog
+  - counter
+  - adc
+  - espi
+  - peci
+  - ps2
+  - kscan
+  - pinctrl

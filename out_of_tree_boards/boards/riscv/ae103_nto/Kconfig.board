@@ -1,0 +1,7 @@
+# Copyright (c) 2023, Intel Corporation
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_SPK32_AE103_NTO
+	bool "SPK32 AE103 NTO"
+	depends on SOC_AE103_NTO
+
