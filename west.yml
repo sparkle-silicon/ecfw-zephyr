@@ -23,7 +23,7 @@ manifest:
     # Open source branch uses official Zephyr tree
     - name: zephyr_public
       repo-path: zephyr.git
-      path: ecfwwork/zephyr_fork
+      path: west/zephyr_fork
       remote: zephyrproject
       # 原官方 v3.6.0；改用 spksilicon-ae103 分支（含 ae103 SoC 移植）
       revision: spksilicon-ae103
@@ -32,13 +32,14 @@ manifest:
 
     - name: cmsis
       revision: 4b96cbb174678dcd3ca86e11e1f24bc5f8726da0
-      path: ecfwwork/modules/hal/cmsis
+      path: west/modules/hal/cmsis
       remote: zephyrproject
 
     - name: hal_microchip
       revision: 5d079f1683a00b801373bbbbf5d181d4e33b30d5
-      path: ecfwwork/modules/hal/microchip
+      path: west/modules/hal/microchip
       remote: zephyrproject
 
   self:
-    path: ecfwwork
+    # manifest 仓库（本库）实际位于顶层 ecfw-zephyr/，与 .west/config 的 [manifest] path 对齐
+    path: ecfw-zephyr
