@@ -1,11 +1,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
+if(NOT CONFIG_SOC_SERIES_SPK_AE103X)
+# x86 EC board 层实现（board_init/board_devices_check 等），SPK 最小验证暂不接入。
 target_sources(app
     PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/board.c
     PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/board.h
     )
+endif()
 
 if(CONFIG_SOC_FAMILY_MEC)
 
@@ -45,5 +48,14 @@ target_include_directories(app
     ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/nuvoton
     ${CMAKE_CURRENT_LIST_DIR}/nuvoton/npcx4m8f_mecc    )
+
+else()
+
+# SPK 等其它 SoC：board 层公共头（board.h / board_config.h）同样要可见，
+# 只是无 MEC/NPCX 专属子目录。原文件仅覆盖 MEC/NPCX4 两个分支，SPK 接入时补此分支。
+target_include_directories(app
+    PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}
+    )
 
 endif()

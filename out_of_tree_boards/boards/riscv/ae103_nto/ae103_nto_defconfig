@@ -5,9 +5,12 @@ CONFIG_SOC_SERIES_SPK_AE103X=y
 CONFIG_SOC_AE103_NTO=y
 CONFIG_BOARD_SPK32_AE103_NTO=y
 
-# Milestone 1: run from SRAM. Switch to XIP (flash @ 0x80000) once the
-# flash controller / boot flow is in place.
-CONFIG_XIP=n
+# XIP：从外部 flash @ 0x80000 运行，启动头部（vector_base/_start/FlashInfo）
+# 对齐芯片 ROM 引导格式（原 Milestone 1 为 CONFIG_XIP=n 从 SRAM 0x20000 跑）。
+CONFIG_XIP=y
+
+# ELF 入口指向复位桩 _start（0x80084），与 FlashInfo.ReStart 的 ROM 跳转一致（gdb 友好）。
+CONFIG_KERNEL_ENTRY="_start"
 
 # Milestone 1: no SPK TIMER driver yet; disable sys_clock so the kernel
 # skeleton links. Re-enable together with the ae103 timer driver.

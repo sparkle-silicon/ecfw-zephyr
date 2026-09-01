@@ -1,5 +1,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
+# SPK AE103 最小验证：drivers 层全是 x86 EC 外设驱动，暂不接入。
+if(NOT CONFIG_SOC_SERIES_SPK_AE103X)
+
 if (CONFIG_PS2_KEYBOARD OR CONFIG_PS2_MOUSE)
 target_sources(app
     PRIVATE
@@ -106,3 +109,5 @@ target_include_directories(app
     PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
     )
+
+endif() # NOT CONFIG_SOC_SERIES_SPK_AE103X

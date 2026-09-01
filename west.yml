@@ -13,7 +13,8 @@ west:
 manifest:
 
   remotes:
-    - name: zephyrproject
+    # 原名 zephyrproject（因沿用官方命名导致 VS Code 显示误导），现改为 fork 组织名
+    - name: sparkle-silicon
       # 原官方源（私有化前）: https://github.com/zephyrproject-rtos
       url-base: git@github.com:sparkle-silicon
 
@@ -24,7 +25,7 @@ manifest:
     - name: zephyr_public
       repo-path: zephyr.git
       path: west/zephyr_fork
-      remote: zephyrproject
+      remote: sparkle-silicon
       # 原官方 v3.6.0；改用 spksilicon-ae103 分支（含 ae103 SoC 移植）
       revision: spksilicon-ae103
       clone-depth: 1
@@ -33,12 +34,12 @@ manifest:
     - name: cmsis
       revision: 4b96cbb174678dcd3ca86e11e1f24bc5f8726da0
       path: west/modules/hal/cmsis
-      remote: zephyrproject
+      remote: sparkle-silicon
 
     - name: hal_microchip
       revision: 5d079f1683a00b801373bbbbf5d181d4e33b30d5
       path: west/modules/hal/microchip
-      remote: zephyrproject
+      remote: sparkle-silicon
 
   self:
     # manifest 仓库（本库）实际位于顶层 ecfw-zephyr/，与 .west/config 的 [manifest] path 对齐

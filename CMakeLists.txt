@@ -15,3 +15,5 @@ include_directories(ecfw_app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 zephyr_compile_options(-Werror -Wno-address-of-packed-member)
 zephyr_linker_sources(SECTIONS linker/custom-sections.ld)
+# 芯片启动头部（vector_base/_start/FlashInfo），SORT_KEY 0x0 排在 zephyr vector_table.ld(0x0vectors) 之前
+zephyr_linker_sources(ROM_START SORT_KEY 0x0 linker/startup.ld)
