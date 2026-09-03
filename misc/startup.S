@@ -11,7 +11,7 @@
  * zephyr 的 _isr_wrapper（exception.entry 统一入口），中断子系统落地后再替换为
  * 各外设真实 handler（CPUS/CPUT/.../INTR0/INTR1）。
  */
-
+#include <startup.H>
 .section .vtable, "ax"		/* 定义 .vtable 段, a :可分配, x :可执行 */
 .globl vector_base			/* 全局符号 vector_base 供链接器和其他代码调度用*/
 vector_base:				/* 基地址标签 全局符号 vector_base 的起始*/
