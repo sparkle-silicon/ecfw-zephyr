@@ -31,16 +31,6 @@ manifest:
       clone-depth: 1
       west-commands: scripts/west-commands.yml
 
-    - name: cmsis
-      revision: 4b96cbb174678dcd3ca86e11e1f24bc5f8726da0
-      path: west/modules/hal/cmsis
-      remote: sparkle-silicon
-
-    - name: hal_microchip
-      revision: 5d079f1683a00b801373bbbbf5d181d4e33b30d5
-      path: west/modules/hal/microchip
-      remote: sparkle-silicon
-
   self:
     # manifest 仓库（本库）实际位于顶层 ecfw-zephyr/，与 .west/config 的 [manifest] path 对齐
     path: ecfw-zephyr
