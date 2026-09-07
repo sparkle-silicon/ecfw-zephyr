@@ -1,0 +1,16 @@
+/*
+ * Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * 测试专用 DT overlay：把 sram0 从 32KB（片上数据 SRAM，0x20000~0x27FFF）
+ * 扩到 64KB（SRAM + iRAM0，0x20000~0x2FFFF），供 GCOV 全量插桩的
+ * 覆盖率计数区 + dump 堆使用（全量插桩 ≈45KB > 32KB DRAM，见 BUILD.md 7.11.4）。
+ *
+ * ⚠️ 仅 test 组合加载（build.sh 的 test 分支经 DTC_OVERLAY_FILE 注入）。
+ *    iRAM0 是独立电源域、低功耗会关闭——生产/交付固件禁止使用本 overlay，
+ *    否则 .data/.bss/.stack 铺进 iRAM0 后，一进低功耗即数据丢失。
+ */
+
+&sram0 {
+	reg = <0x20000 0x10000>;
+};

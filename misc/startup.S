@@ -11,7 +11,8 @@
  * zephyr 的 _isr_wrapper（exception.entry 统一入口），中断子系统落地后再替换为
  * 各外设真实 handler（CPUS/CPUT/.../INTR0/INTR1）。
  */
-#include <startup.H>
+# #include "n100_csr.h"# #include <startup.H>
+
 .section .vtable, "ax"		/* 定义 .vtable 段, a :可分配, x :可执行 */
 .globl vector_base			/* 全局符号 vector_base 供链接器和其他代码调度用*/
 vector_base:				/* 基地址标签 全局符号 vector_base 的起始*/
@@ -27,7 +28,31 @@ vector_base:				/* 基地址标签 全局符号 vector_base 的起始*/
 .section .ae_start, "ax" 	/* 定义 ae_start 段, a :可分配, x :可执行 */
 .globl _start			 	/* 全局符号 _start 供链接器和其他代码调度用*/
 _start:					 	/* 基地址标签 全局符号 vector_base 的起始*/
+#define CSR_MSTATUS 			0x300 // 异常处理状态寄存器
+#define MSTATUS_MIE 			0x00000008 // 1中断全局开启，0中断全局屏蔽
+	//csrrci	a5,mstatus,8 //标准
+	//csrci	mstatus,8//伪指令版本,等价csrrci	x0,mstatus,8
+	//csrc 0x300,0x00000008//实际使用等价csrci	mstatus,8
+    csrc CSR_MSTATUS, MSTATUS_MIE//中断全局关闭,避免异常跳转 ,可以走后面,但是为了以防万一,放在这边了
+#define CSR_MCOUNTINHIBIT       0x320
+#define CSR_MCOUNTINHIBIT_CY    0x00000001   /* bit0：1 关 mcycle 计数 */
+#define CSR_MCOUNTINHIBIT_IR    0x00000004   /* bit2：1 关 minstret 计数 */
+    csrsi CSR_MCOUNTINHIBIT, (CSR_MCOUNTINHIBIT_CY|CSR_MCOUNTINHIBIT_IR)//关闭全局计数,减少功耗
 	j __start			 	/* 跳转到 __start */
+
+# __scatterload_shareram://将SRAM的空间清零
+# 2:	    //sram
+#     la a0, 0x31000
+# 	la a1, 0x32000
+# 	bgeu a0, a1, 2f
+# 1:
+# 	sw zero, (a0)
+# 	addi a0, a0, 4
+# 	bltu a0, a1, 1b
+
+# 	call Init//调用Init
+# 	call main //调用main函数，开始执行main函数
+# 	tail exit//如果完成了main函数后，调用exit函数（Newlib桩函数之一，参见第2.3.1
 
 #Old Code
 # #include <RISCV.H>
@@ -96,12 +121,6 @@ _start:					 	/* 基地址标签 全局符号 vector_base 的起始*/
 #     csrc CSR_MSTATUS, MSTATUS_MIE//中断全局关闭
 #     csrsi CSR_MCOUNTINHIBIT, 0x5//关闭全局计数
     
-# 	//li   t1, (3)	//pioc8 pioc9 high
-#     //li   t0, 0x3005
-#     //sb   t1, 0(t0)
-#     //li   t0, 0x3001
-#     //sb   t1, 0(t0)
-
 #     la sp, _sp //将标签_sp所处的地址赋值给sp寄存器
 #     //注意：标签_sp在链接脚本中定义，参见链接脚本的_sp标签
 #     .option push

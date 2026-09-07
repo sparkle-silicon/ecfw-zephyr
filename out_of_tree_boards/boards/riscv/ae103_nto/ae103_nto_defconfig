@@ -18,3 +18,15 @@ CONFIG_SYS_CLOCK_EXISTS=n
 
 # AE103 hardware timer driver (reference peripheral driver template).
 CONFIG_AE103_TIMER=y
+
+# AE103 UART driver (16550-compatible, poll-only).
+CONFIG_AE103_UART=y
+
+# Serial console：printk 经 UART0 输出（对齐裸机 debug 口）。
+CONFIG_SERIAL=y
+CONFIG_CONSOLE=y
+CONFIG_UART_CONSOLE=y
+
+# TEMP-VERIFY: gp 相对寻址验证（验证后移除，默认保持关）
+CONFIG_RISCV_GP=y
+CONFIG_RISCV_SMALL_DATA_LIMIT=8
