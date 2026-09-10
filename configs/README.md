@@ -10,6 +10,12 @@
 | `base.conf` | ① 正式代码 | 底层必须、架构强依赖（如 CODE_DATA_RELOCATION） | ✅ 随交付 |
 | `optional.conf` | ② 可选功能 | 可扩展、按需开关（如 INIT_STACKS、WDOG_INIT、MP_MAX_NUM_CPUS） | ✅ 可选项 |
 | `test.conf` | ③ 测试代码 | 内部测试专用（如 COVERAGE_GCOV） | ❌ 交付时排除 |
+| `opt.conf` | ④ 编译选项 | 优化等级/-g/-flto/额外 RISC-V flag，对齐 common.mk | ✅ 随交付 |
+
+> `opt.conf` 与前三者不同：它**不属于功能分层**，而是「编译参数」。`build.sh`
+> 会**固定引入**（不受 `PARTS` 影响），改它就能切换优化等级、调试信息、LTO 等，
+> 无需改 `build.sh` 或命令行。默认 `-O2`（Zephyr 原生最高档），要试 `-O3`/`-Ofast`
+> 见 `opt.conf` 内注释。
 
 ## 组合用法
 

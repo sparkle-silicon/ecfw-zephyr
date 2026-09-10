@@ -8,6 +8,12 @@
  */
 
 #include "flash_info.h"
+#include <zephyr/sys/util.h>
+
+/* 主频分频 div = 80M / clock-frequency 必须整除，否则 BootROM 会读到截断的 div
+ * （如 25M → 80M/25M = 3.2 截断 3，静默配错主频）。 */
+BUILD_ASSERT(FLASH_INFO_CLOCK_SRC_HZ %DT_PROP(DT_NODELABEL(cpu0), clock_frequency) == 0,
+		 "cpu0 clock-frequency 必须是 80M 的约数（80M/div 才能整除）");
 
 /*
  * 段名必须精确为 .FlashInfo.Fixed（startup.ld 里 KEEP(*(.FlashInfo.Fixed))），
@@ -60,7 +66,7 @@ sFixedFlashInfo Fix_flash_info = {
 #else
 	.JTAG_Enable = FLASH_INFO_JTAG_DISABLE,
 #endif
-#if PRINTF_UART_SWITCH<=UARTB_CHANNEL
+#if PRINTF_UART_SWITCH<=AE103_UARTB_CHANNEL
 	.LOG_PRINTF_Enable = FLASH_INFO_LOG_ENABLE,
 	.LOG_PRINTF_UARTn_Switch = PRINTF_UART_SWITCH,
 	.LOG_PRINTF_LEVEL = FLASH_INFO_LOG_BRIEF,

@@ -21,7 +21,11 @@
 };
 
 &cpu0 {
-	clock-frequency = <48000000>;
+	/* 主频 Hz 单一事实源：20M = 80M / 4（div=4）。分频系数 div 由 flash_info.h 反推
+	 * （FLASH_INFO_MAIN_FREQ_DEFAULT = 80M / clock-frequency），Kconfig 的
+	 * SYS_CLOCK_HW_CYCLES_PER_SEC 也从这里推导（dt_node_int_prop_int）。改主频只改此处。
+	 * 值必须是 80M 的约数（80/40/20/10/5/2.5M...），BootROM 按反推的 div 配 CLKDIV。 */
+	clock-frequency = <20000000>;
 	status = "okay";
 };
 

@@ -15,6 +15,7 @@
 #define __FLASH_INFO_H__
 
 #include <stdint.h>
+#include <zephyr/devicetree.h>
 
 #define FLASH_INFO_ENABLE_BACKUP 0
 #define FLASH_INFO_ENABLE_EXTERNAL_FLASH 1
@@ -25,7 +26,12 @@
 #define FIRMWARE_KBYTE_SIZE 512
 #define PRINTF_UART_SWITCH 0
 #define PRINTF_UART_BAUD 115200
-#define FLASH_INFO_MAIN_FREQ_DEFAULT        4  /* 默认主频分频系数 */
+/* 主频基频 80M（内部高速振荡器，硬件固定；= soc clock.h 的 AE103_CLOCK_SRC_HZ）。
+ * 主频 Hz 单一事实源 = dts 的 cpu0 clock-frequency（ae103_nto.dts），分频系数
+ * div = 80M / Hz 由此反推，改主频只改 dts 一处。整除约束由 flash_info.c 断言校验。 */
+#define FLASH_INFO_CLOCK_SRC_HZ 80000000UL
+#define FLASH_INFO_MAIN_FREQ_DEFAULT \
+	(FLASH_INFO_CLOCK_SRC_HZ / DT_PROP(DT_NODELABEL(cpu0), clock_frequency))
 #define FLASH_INFO_UART0_TXD_SWITCH 0//UART0_TXD_SEL
 #define FLASH_INFO_UART1_TXD_SWITCH 0//UART1_TXD_SEL
 #define FLASH_INFO_UART1_RXD_SWITCH 0//UART1_RXD_SEL
@@ -218,7 +224,13 @@ typedef struct _FixedFlashInfo{
 	uint32_t JTAG_Switch : 1;
 	uint32_t LOG_PRINTF_Enable : 1;
 	uint32_t DEBUGGER_Enable : 1;
+
+#define AE103_UART0_CHANNEL 0
+#define AE103_UART1_CHANNEL 1
+#define AE103_UARTA_CHANNEL 2
+#define AE103_UARTB_CHANNEL 3
 	uint32_t LOG_PRINTF_UARTn_Switch : 2;
+
 	uint32_t LOG_PRINTF_LEVEL : 1;
 	uint32_t LOG_PRINTF_BAUD_RATE : 7;
 	uint32_t DEBUGGER_UART_Enable : 1;
