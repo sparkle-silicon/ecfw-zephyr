@@ -1,17 +1,12 @@
 /*
- * @Author: Linyu
- * @LastEditors: daweslinyu daowes.ly@qq.com
- * @LastEditTime: 2026-09-04 17:43:39
- * @Description:
+ * Copyright (c) 2021-2026 Sparkle Silicon Technology Corp., Ltd.
+ * SPDX-License-Identifier: Apache-2.0
  *
+ * AE103 启动头定义（CSR / 段 / 内存布局）。源自固件库同名头文件，
+ * 现仅作启动流程验证的参照保留，不参与本库编译。
  *
- * The following is the Chinese and English copyright notice, encoded as UTF-8.
- * 以下是中文及英文版权同步声明，编码为UTF-8。
- * Copyright has legal effects and violations will be prosecuted.
- * 版权具有法律效力，违反必究。
- *
- * Copyright ©2021-2026 Sparkle Silicon Technology Corp., Ltd. All Rights Reserved.
- * 版权所有 ©2021-2026 龙晶石半导体科技（苏州）有限公司
+ * Zephyr 侧已规范化、可直接 include 的 CSR 定义见：
+ *   soc/riscv/spksilicon/common/n100_csr.h
  */
 #ifndef _RISCV_H_
 #define _RISCV_H_

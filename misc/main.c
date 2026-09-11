@@ -18,11 +18,14 @@
 
 void main(void)
 {
+	//test_main
 	/* UART console 验证：若 printk 能经 UART0 吐出，说明 serial console
 	 * 链路（驱动 → chosen console → CONFIG_UART_CONSOLE）已通。 */
 	printk("EC FW Zephyr boot: %s\n", CONFIG_BOARD);
+	printk("EC FW Zephyr : Minimal\n");//最小验证方案
 
-	while (1) {
+	while (1)//test_loop
+	{
 		k_sleep(K_SECONDS(1));
 	}
 }

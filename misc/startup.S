@@ -11,7 +11,8 @@
  * zephyr 的 _isr_wrapper（exception.entry 统一入口），中断子系统落地后再替换为
  * 各外设真实 handler（CPUS/CPUT/.../INTR0/INTR1）。
  */
-# #include "n100_csr.h"# #include <startup.H>
+# #include "n100_csr.h"
+# #include "startup.h"
 
 .section .vtable, "ax"		/* 定义 .vtable 段, a :可分配, x :可执行 */
 .globl vector_base			/* 全局符号 vector_base 供链接器和其他代码调度用*/
@@ -39,6 +40,46 @@ _start:					 	/* 基地址标签 全局符号 vector_base 的起始*/
 #define CSR_MCOUNTINHIBIT_IR    0x00000004   /* bit2：1 关 minstret 计数 */
     csrsi CSR_MCOUNTINHIBIT, (CSR_MCOUNTINHIBIT_CY|CSR_MCOUNTINHIBIT_IR)//关闭全局计数,减少功耗
 	j __start			 	/* 跳转到 __start */
+
+# GTEXT(__nuclei_start)进一步可以这样子_start
+# SECTION_FUNC(init, __nuclei_start)
+# 	/* Disable Global Interrupt */
+# 	csrc mstatus, MSTATUS_MIE //关闭全局中断
+# 	/* Jump to logical address first to ensure correct operation of RAM region  */
+# 	la	a0, __nuclei_start	//加载符号的实际地址
+# 	li	a1, 1//根据位移获取地址
+# 	slli	a1, a1, 20  # 0x0010 0000 
+# 	#la a1,0x00100000 //512K
+# 	#la a1,0x000C0000 //256K
+# 	bgeu	a0, a1, _redirect # 大于等于则为例外位置跳转重新配置
+# 	srli	a1, a1, 1 # 0x0008 0000 
+# 	#la a1,0x00080000
+# 	bgeu	a0, a1, _start0800 # 大于等于则为cache位置跳转重新配置
+# 	#la a1,0x00034000
+# 	#la a1,0x00031000
+# 	#la a1,0x00028000
+# 	srli	a1, a1, 2 # 0x0002 0000 
+# 	#la a1,0x00020000
+# 	bgeu	a0, a1, _start0800# 大于等于则为ram位置跳转重新配置
+# 	srli	a1, a1, 1 # 0x0001 0000 
+# 	#la a1,0x00010000
+# 	bgeu	a0, a1, _start0800# 大于等于则为rom位置跳转重新配置
+# 	#小于地址或者大于地址则重置为FLASH CACHE作为调度空间
+# _redirect:
+# 	la	a0, _start0800
+# 	add	a0, a0, a1
+# 	jr	a0
+
+# _start0800:
+# 	la a0,vector_base
+# 	addi a0,a0,0x80
+# 	la a1,0x30880
+# 	lw a2,0(a0)
+# 	sw a2,0(a1)
+# 	/* Disable performance counter */
+# 	csrsi	mcountinhibit, 0x5
+# 	/* Jump to common start */
+# 	tail __start
 
 # __scatterload_shareram://将SRAM的空间清零
 # 2:	    //sram
