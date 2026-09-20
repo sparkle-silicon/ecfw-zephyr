@@ -2,7 +2,7 @@
  * Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
  * SPDX-License-Identifier: Apache-2.0
  *
- * AE103 启动头部汇编。对齐旧固件 Firmware/AE20X/START.S 的 .vtable / ._start
+ * AE201 启动头部汇编。对齐旧固件 Firmware/AE20X/START.S 的 .vtable / ._start
  * 布局，使芯片 ROM（复位后读 FlashInfo 的 IVT/ReStart）能正确搬运向量表并跳转。
  *
  * 向量表是「蜂鸟 E203 CLIC mtvt」风格：32 个 .word 处理器地址（jump by address），

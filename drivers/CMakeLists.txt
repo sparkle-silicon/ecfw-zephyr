@@ -1,7 +1,13 @@
 # SPDX-License-Identifier: Apache-2.0
 
-# SPK AE103 最小验证：drivers 层全是 x86 EC 外设驱动，暂不接入。
-if(NOT CONFIG_SOC_SERIES_SPK_AE103X)
+# SPK AE201：本目录均为 x86 EC 外设驱动（eSPI/PS2/KSCAN/PECI/ADC/风扇/LED 等），
+# AE201 侧由 SoC 层驱动承接（west/zephyr_fork/soc/riscv/spksilicon/ae201/），
+# 故下述源文件在 AE201 构建中不参与编译。
+#
+# 但 include 路径必须无条件生效（见文件末尾）：板级公共代码 boards/board.c 会引用
+# 这里的头文件（i2c_hub.h / gpio_ec.h 等），若把 include 路径一并圈进条件块，
+# AE201 下这些头文件将从搜索路径中消失，导致板层无法编译。
+if(NOT CONFIG_SOC_SERIES_SPK_AE201X)
 
 if (CONFIG_PS2_KEYBOARD OR CONFIG_PS2_MOUSE)
 target_sources(app
@@ -105,9 +111,12 @@ target_sources_ifdef(CONFIG_SOC_NPCX4M8F app
     PUBLIC
     )
 
+endif() # NOT CONFIG_SOC_SERIES_SPK_AE201X
+
+# SPDX AE201：include 路径无条件生效（刻意放在条件块之外）。
+# board 层公共代码引用的头文件（i2c_hub.h / gpio_ec.h / eeprom.h 等）需始终可见，
+# 与源文件是否参与编译无关。
 target_include_directories(app
     PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
     )
-
-endif() # NOT CONFIG_SOC_SERIES_SPK_AE103X

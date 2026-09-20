@@ -5,10 +5,10 @@
 
 /dts-v1/;
 
-#include <spksilicon/ae103.dtsi>
+#include <spksilicon/ae201.dtsi>
 
 / {
-	model = "SPK32 AE103 NTO";
+	model = "SPK32 AE201 NTO";
 
 	chosen {
 		zephyr,sram = &sram0;

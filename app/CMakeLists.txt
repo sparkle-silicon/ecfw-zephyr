@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
-if(NOT CONFIG_SOC_SERIES_SPK_AE103X)
+if(NOT CONFIG_SOC_SERIES_SPK_AE201X)
 # x86 EC app 层业务（main 在 misc/main.c，SPK 最小验证暂不接入）。
 target_sources(app
     PRIVATE

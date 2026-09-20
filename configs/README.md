@@ -14,7 +14,8 @@
 
 > `opt.conf` 与前三者不同：它**不属于功能分层**，而是「编译参数」。`build.sh`
 > 会**固定引入**（不受 `PARTS` 影响），改它就能切换优化等级、调试信息、LTO 等，
-> 无需改 `build.sh` 或命令行。默认 `-O2`（Zephyr 原生最高档），要试 `-O3`/`-Ofast`
+> 无需改 `build.sh` 或命令行。默认 `-Os`（体积优先，由 `opt.conf` 的
+> `CONFIG_SIZE_OPTIMIZATIONS=y` 决定，对齐原固件 common.mk），要试 `-O2`/`-O3`/`-Ofast`
 > 见 `opt.conf` 内注释。
 
 ## 组合用法
@@ -35,8 +36,6 @@
 ## 与上游 conf 的关系
 
 - `prj.conf`：上游 EC 继承主配置，**始终加载**，本框架不动它。
-- `ae103_nto_minimal.conf`：AE103 最小验证覆盖（暂无 systimer，`CONFIG_LOG=n`），
-  `build.sh` 会固定追加，待 systimer 落地后移除。
 - `debug.conf` / `release.conf` / `safdebug.conf`：上游遗留，当前未接入本框架。
 
 ## CODE_DATA_RELOCATION 前置条件（重要）

@@ -2,7 +2,7 @@
  * Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
  * SPDX-License-Identifier: Apache-2.0
  *
- * AE103 启动头部布局（ROM_START snippet，SORT_KEY 0x0 排在 zephyr
+ * AE201 启动头部布局（ROM_START snippet，SORT_KEY 0x0 排在 zephyr
  * vector_table.ld 之前）。对齐旧固件 Firmware/AE20X/ENV/link_flash.lds 的
  * .boot 段，使芯片 ROM 能按 FlashInfo 的 IVT/ReStart 字段正确跳转并搬运向量表：
  *

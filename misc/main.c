@@ -2,7 +2,7 @@
  * Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
  * SPDX-License-Identifier: Apache-2.0
  *
- * SPK AE103 启动入口。当前是「最小验证骨架」，对应 EC 标准启动流程的
+ * SPK AE201 启动入口。当前是「最小验证骨架」，对应 EC 标准启动流程的
  * 最前段：UART console 早期就位（本文件最上面那句 printk 即验证点），
  * 之后才轮到中断配置、内存初始化、外设初始化、主循环 —— 与裸机固件
  * KERNEL_MAIN.c 的 main() 顺序一致（config_irqc → 开中断 → init_memory

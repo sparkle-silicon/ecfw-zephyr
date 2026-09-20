@@ -1,9 +1,9 @@
 # Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
 # SPDX-License-Identifier: Apache-2.0
 
-CONFIG_SOC_SERIES_SPK_AE103X=y
-CONFIG_SOC_AE103_NTO=y
-CONFIG_BOARD_SPK32_AE103_NTO=y
+CONFIG_SOC_SERIES_SPK_AE201X=y
+CONFIG_SOC_AE201=y
+CONFIG_BOARD_SPK32_AE201_NTO=y
 
 # XIP：从外部 flash @ 0x80000 运行，启动头部（vector_base/_start/FlashInfo）
 # 对齐芯片 ROM 引导格式（原 Milestone 1 为 CONFIG_XIP=n 从 SRAM 0x20000 跑）。
@@ -13,17 +13,17 @@ CONFIG_XIP=y
 CONFIG_KERNEL_ENTRY="_start"
 
 # Milestone 1: no SPK TIMER driver yet; disable sys_clock so the kernel
-# skeleton links. Re-enable together with the ae103 timer driver.
+# skeleton links. Re-enable together with the ae201 timer driver.
 CONFIG_SYS_CLOCK_EXISTS=n
 
-# AE103 hardware timer driver (reference peripheral driver template).
-CONFIG_AE103_TIMER=y
+# AE201 hardware timer driver (reference peripheral driver template).
+CONFIG_AE201_TIMER=y
 
-# AE103 UART driver (16550-compatible, poll-only).
-CONFIG_AE103_UART=y
+# AE201 UART driver (16550-compatible, poll-only).
+CONFIG_AE201_UART=y
 
-# AE103 GPIO driver (DW_apb_gpio compatible, poll-only).
-CONFIG_AE103_GPIO=y
+# AE201 GPIO driver (DW_apb_gpio compatible, poll-only).
+CONFIG_AE201_GPIO=y
 
 # Serial console：printk 经 UART0 输出（对齐裸机 debug 口）。
 CONFIG_SERIAL=y
@@ -33,7 +33,7 @@ CONFIG_UART_CONSOLE=y
 # # ----  全局指针 gp（global pointer）----
 # # 作用：≤ RISCV_SMALL_DATA_LIMIT 的小全局变量用 gp 相对寻址（单指令访问），省代码量。
 # # 注意：⚠️ 需要 SoC 在程序启动时初始化 gp（__global_pointer$ 符号）。
-# #       ✅ 实测：AE103 启动代码 __start@0x80200 已含 auipc+addi 初始化 gp，
+# #       ✅ 实测：AE201 启动代码 __start@0x80200 已含 auipc+addi 初始化 gp，
 # #          编译链接通过、gp 初始化就绪，可安全开启。
 CONFIG_RISCV_GP=y
 CONFIG_RISCV_SMALL_DATA_LIMIT=8

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Sparkle Silicon Technology Corp., Ltd.
  * SPDX-License-Identifier: Apache-2.0
  *
- * AE103 启动头定义（CSR / 段 / 内存布局）。源自固件库同名头文件，
+ * AE201 启动头定义（CSR / 段 / 内存布局）。源自固件库同名头文件，
  * 现仅作启动流程验证的参照保留，不参与本库编译。
  *
  * Zephyr 侧已规范化、可直接 include 的 CSR 定义见：
