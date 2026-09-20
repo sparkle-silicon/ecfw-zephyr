@@ -1,6 +1,15 @@
 if(CONFIG_SOC_SERIES_SPK_AE201X)
-# SPK AE201 最小验证：只编启动骨架（startup.S/flash_info.c）+ minimal main。
-# x86 EC 的 misc 业务（flashhdr/softstrap/task_handler）待板层适配后再接。
+# AE201：只编启动骨架（startup.S / flash_info.c）+ 最小 main。
+#
+# ===================== 里程碑 TODO：misc 层补齐 =====================
+# 下面 x86 分支里的 flashhdr / softstrap / task_handler 三项，分别对应：
+#   flashhdr      Flash 头解析（major_version / minor_version，被 board.c 的
+#                 read_board_id 依赖）
+#   softstrap     软跳线
+#   task_handler  任务调度框架
+# 三者中 flashhdr 是 boards/board.c 的硬依赖 —— 但 AE201 走的是
+# boards/spksilicon/ 的独立板级实现，不依赖它，故非阻塞。
+# 待 app 层接入时按其真实依赖逐个补齐。
 target_sources(app
     PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/startup.S
