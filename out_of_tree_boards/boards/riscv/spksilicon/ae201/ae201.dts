@@ -8,7 +8,7 @@
 #include <spksilicon/ae201.dtsi>
 
 / {
-	model = "SPK32 AE201 NTO";
+	model = "SPK32 AE201";
 
 	chosen {
 		zephyr,sram = &sram0;

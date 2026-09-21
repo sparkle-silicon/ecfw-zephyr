@@ -1,9 +1,9 @@
 # Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
 # SPDX-License-Identifier: Apache-2.0
 
-if BOARD_SPK32_AE201_NTO
+if BOARD_SPK32_AE201
 
 config BOARD
-	default "ae201_nto"
+	default "ae201"
 
-endif # BOARD_SPK32_AE201_NTO
+endif # BOARD_SPK32_AE201

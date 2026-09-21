@@ -2,8 +2,8 @@
  * Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
  * SPDX-License-Identifier: Apache-2.0
  *
- * @file ae201_nto.c
- * @brief AE201 NTO 板级实现（board_init / board_suspend / board_resume）。
+ * @file ae201.c
+ * @brief AE201 板级实现（board_init / board_suspend / board_resume）。
  *
  * 【与 x86 EC 侧 board.c 的关系 —— 并列，不是继承】
  *
@@ -36,7 +36,7 @@
 
 #include "board.h"
 #include "board_config.h"
-#include "ae201_nto.h"
+#include "ae201.h"
 
 LOG_MODULE_REGISTER(board, CONFIG_BOARD_LOG_LEVEL);
 
@@ -79,23 +79,31 @@ static int ae201_board_devices_check(void)
 
 	ndevs = z_device_get_all_static(&dev);
 
-	if ((ndevs == 0) || (dev == NULL)) {
+	if ((ndevs == 0) || (dev == NULL))
+	{
 		LOG_ERR("No devices initialized!");
 		return -ENODEV;
 	}
 
 	devlist_end = dev + ndevs;
 
-	while (dev < devlist_end) {
-		if ((dev->name != NULL) && (strlen(dev->name) != 0)) {
-			if (z_device_is_ready(dev)) {
+	while (dev < devlist_end)
+	{
+		if ((dev->name != NULL) && (strlen(dev->name) != 0))
+		{
+			if (z_device_is_ready(dev))
+			{
 				LOG_DBG("%s ready", dev->name);
-			} else {
+			}
+			else
+			{
 				LOG_WRN("%s not ready. Check dts", dev->name);
 				printk("%s not ready. Check dts\n", dev->name);
 				return -ENODEV;
 			}
-		} else {
+		}
+		else
+		{
 			LOG_WRN("Device with no name");
 		}
 
@@ -109,10 +117,11 @@ int board_init(void)
 {
 	int ret;
 
-	LOG_INF("%s board init", AE201_NTO_BOARD_MODEL);
+	LOG_INF("%s board init", AE201_BOARD_MODEL);
 
 	ret = ae201_board_devices_check();
-	if (ret) {
+	if (ret)
+	{
 		LOG_ERR("Board device check failed: %d", ret);
 		return ret;
 	}
@@ -122,7 +131,7 @@ int board_init(void)
 	 *   对照 x86 侧 npcx4m8f_aic_on_ptl.c 的 board_init() 顺序：
 	 *     - 板级 GPIO 引脚表配置（对应 gpio_configure_array 的位置）
 	 *     - 板级 ID 读取（对应 read_board_id / update_platform_sku_type）
-	 *   引脚表建在 ae201_nto.h，形态对齐 mecc_npcx9_cfg。
+	 *   引脚表建在 ae201.h，形态对齐 mecc_npcx9_cfg。
 	 */
 
 	return 0;

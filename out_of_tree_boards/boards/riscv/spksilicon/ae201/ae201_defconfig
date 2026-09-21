@@ -3,7 +3,7 @@
 
 CONFIG_SOC_SERIES_SPK_AE201X=y
 CONFIG_SOC_AE201=y
-CONFIG_BOARD_SPK32_AE201_NTO=y
+CONFIG_BOARD_SPK32_AE201=y
 
 # XIP：从外部 flash @ 0x80000 运行，启动头部（vector_base/_start/FlashInfo）
 # 对齐芯片 ROM 引导格式（原 Milestone 1 为 CONFIG_XIP=n 从 SRAM 0x20000 跑）。

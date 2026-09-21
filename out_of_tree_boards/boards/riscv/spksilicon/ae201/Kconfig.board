@@ -1,7 +1,7 @@
 # Copyright (c) 2023, Intel Corporation
 # SPDX-License-Identifier: Apache-2.0
 
-config BOARD_SPK32_AE201_NTO
-	bool "SPK32 AE201 NTO"
+config BOARD_SPK32_AE201
+	bool "SPK32 AE201"
 	depends on SOC_AE201
 

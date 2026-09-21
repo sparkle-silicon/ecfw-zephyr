@@ -1,6 +1,9 @@
-; MEC172x SPI Image Generator configuration file for internal 512KB flash
+; SPK32AE201X SPI Image Generator configuration file for internal None/256KB/512KB flash
+;
 [SPI]
-SPISizeMegabits = 4
+; SPISizeMegabits = 0
+SPISizeMegabits = 2
+; SPISizeMegabits = 4
 Flashmap = false
 FlshmapAddr = 0
 

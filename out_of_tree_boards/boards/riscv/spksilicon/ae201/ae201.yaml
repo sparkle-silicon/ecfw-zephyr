@@ -1,8 +1,8 @@
 # Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
 # SPDX-License-Identifier: Apache-2.0
 
-identifier: ae201_nto
-name: SPK32 AE201 NTO
+identifier: ae201
+name: SPK32 AE201
 type: mcu
 arch: riscv
 toolchain:

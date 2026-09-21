@@ -50,7 +50,7 @@ else()
 #   2. 目标是让 misc/main.c 换成这里的 app.c —— 即 EC 标准启动序：
 #      board_devices_check → espihub_init → board_init → strap_init
 #      → start_all_tasks
-#   3. 届时 board_init() 由 boards/spksilicon/ae201_nto/ae201_nto.c 提供
+#   3. 届时 board_init() 由 boards/spksilicon/ae201/ae201.c 提供
 #
 # 现在只给 include 路径，保证接入时 board.h / board_config.h 已可见。
 target_include_directories(app

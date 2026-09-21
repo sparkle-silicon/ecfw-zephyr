@@ -27,7 +27,7 @@
 #define PRINTF_UART_SWITCH 0
 #define PRINTF_UART_BAUD 115200
 /* 主频基频 80M（内部高速振荡器，硬件固定；= soc clock.h 的 AE201_CLOCK_SRC_HZ）。
- * 主频 Hz 单一事实源 = dts 的 cpu0 clock-frequency（ae201_nto.dts），分频系数
+ * 主频 Hz 单一事实源 = dts 的 cpu0 clock-frequency（ae201.dts），分频系数
  * div = 80M / Hz 由此反推，改主频只改 dts 一处。整除约束由 flash_info.c 断言校验。 */
 #define FLASH_INFO_CLOCK_SRC_HZ 80000000UL
 #define FLASH_INFO_MAIN_FREQ_DEFAULT \

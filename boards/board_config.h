@@ -47,7 +47,7 @@ extern uint8_t boot_mode_maf;
  * 热管理实现在 app/thermal_management/，属 x86 EC app 层业务。
  * AE201 下 app 层整层不编译（见 app/CMakeLists.txt 的 SoC 条件），其
  * include 路径也不存在，故此处必须同步排除 —— 否则任何 include 本头文件
- * 的板级源文件（如 boards/spksilicon/ae201_nto/ae201_nto.c）都会因找不到
+ * 的板级源文件（如 boards/spksilicon/ae201/ae201.c）都会因找不到
  * thermalmgmt.h 而编译失败。
  *
  * 注意区分：这不是「include 路径漏加」，而是「AE201 下这些 API 本就没有
