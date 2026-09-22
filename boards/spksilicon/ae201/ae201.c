@@ -11,7 +11,7 @@
  *   boards/spksilicon/    ← 本文件，自包含
  *
  *   boards/CMakeLists.txt 用互斥条件把两者分开（board.c 只在
- *   NOT CONFIG_SOC_SERIES_SPK_AE201X 时编译）。因此本文件**不能**
+ *   NOT CONFIG_SOC_SERIES_SPK32AE201X 时编译）。因此本文件**不能**
  *   引用 i2c_hub_read / gpio_ec_config / major_version 一类的 x86 侧符号，
  *   它们在本配置下根本不存在 —— 编译期就会失败。
  *

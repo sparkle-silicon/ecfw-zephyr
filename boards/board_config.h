@@ -43,21 +43,7 @@ extern uint8_t boot_mode_maf;
 
 #endif /* CONFIG_SOC_FAMILY_MEC */
 
-/*
- * 热管理实现在 app/thermal_management/，属 x86 EC app 层业务。
- * AE201 下 app 层整层不编译（见 app/CMakeLists.txt 的 SoC 条件），其
- * include 路径也不存在，故此处必须同步排除 —— 否则任何 include 本头文件
- * 的板级源文件（如 boards/spksilicon/ae201/ae201.c）都会因找不到
- * thermalmgmt.h 而编译失败。
- *
- * 注意区分：这不是「include 路径漏加」，而是「AE201 下这些 API 本就没有
- * 实现」—— 补回 include 路径只会把编译错误推迟成链接错误。
- *
- * 背景：CONFIG_THERMAL_MANAGEMENT=y 来自 prj.conf（x86 EC 业务需求），
- * 该文件无条件加载，AE201 一并继承。本处的 SoC 条件只挡 include，
- * 不改配置值 —— 配置层的 SoC 条件化留待后续单独一轮处理。
- */
-#if defined(CONFIG_THERMAL_MANAGEMENT) && !defined(CONFIG_SOC_SERIES_SPK_AE201X)
+#ifdef CONFIG_THERMAL_MANAGEMENT
 #include "thermalmgmt.h"
 #include "board_thermal.h"
 #endif
