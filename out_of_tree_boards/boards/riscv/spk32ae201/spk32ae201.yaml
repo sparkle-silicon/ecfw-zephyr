@@ -1,7 +1,7 @@
 # Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
 # SPDX-License-Identifier: Apache-2.0
 
-identifier: ae201
+identifier: spk32ae201
 name: SPK32 AE201
 type: mcu
 arch: riscv

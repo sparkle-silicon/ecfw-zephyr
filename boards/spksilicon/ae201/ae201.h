@@ -17,7 +17,7 @@
 /* ===================== 板级标识 ===================== */
 
 /** 板卡名（与 Kconfig.defconfig 的 config BOARD default 保持一致）。 */
-#define AE201_BOARD_NAME "ae201"
+#define AE201_BOARD_NAME "spk32ae201"
 
 /** 板卡型号描述（与 Kconfig.board 的 bool 提示串保持一致）。 */
 #define AE201_BOARD_MODEL "SPK32 AE201"

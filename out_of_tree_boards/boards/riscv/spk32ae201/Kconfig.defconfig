@@ -4,6 +4,6 @@
 if BOARD_SPK32_AE201
 
 config BOARD
-	default "ae201"
+	default "spk32ae201"
 
 endif # BOARD_SPK32_AE201
