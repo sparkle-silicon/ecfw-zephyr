@@ -5,7 +5,7 @@
 
 /dts-v1/;
 
-#include <spksilicon/ae201.dtsi>
+#include <spksilicon/spk32ae201.dtsi>
 
 / {
 	model = "SPK32 AE201";
