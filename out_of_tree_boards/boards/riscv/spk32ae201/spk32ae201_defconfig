@@ -30,10 +30,19 @@ CONFIG_SERIAL=y
 CONFIG_CONSOLE=y
 CONFIG_UART_CONSOLE=y
 
-# # ----  全局指针 gp（global pointer）----
-# # 作用：≤ RISCV_SMALL_DATA_LIMIT 的小全局变量用 gp 相对寻址（单指令访问），省代码量。
-# # 注意：⚠️ 需要 SoC 在程序启动时初始化 gp（__global_pointer$ 符号）。
-# #       ✅ 实测：AE201 启动代码 __start@0x80200 已含 auipc+addi 初始化 gp，
-# #          编译链接通过、gp 初始化就绪，可安全开启。
+# ---- 全局指针 gp（global pointer）----
+# 作用：≤ RISCV_SMALL_DATA_LIMIT 的小全局变量用 gp 相对寻址（单指令访问），省代码量。
+# 注意：⚠️ 需要 SoC 在程序启动时初始化 gp（__global_pointer$ 符号）。
+#       ✅ 实测：AE201 启动代码 __start@0x80200 已含 auipc+addi 初始化 gp，
+#          编译链接通过、gp 初始化就绪，可安全开启。
+#
+# CONFIG_RISCV_GP 是 Zephyr 上游符号（arch/riscv/Kconfig），属**板卡能力声明**
+#   （"本板的启动代码初始化了 gp"），故留在 defconfig。
+#
+# CONFIG_RISCV_SMALL_DATA_LIMIT 是本项目**应用层**新增的编译阈值，定义在
+#   configs/spksilicon/spk32ae/ae201/Kconfig 的 "AE201 compiler options"。
+#   板卡 defconfig **看不到**那个定义 —— 而 bootloader 构建（mcuboot 自带
+#   Kconfig 根 + 同一块板）会读本 defconfig，赋值未定义符号将触发
+#   Kconfig warning-as-error 而直接构建失败（2026-10-10 实测）。
+#   故已于 2026-10-10 移至 configs/spksilicon/spk32ae/ae201/opt.conf。
 CONFIG_RISCV_GP=y
-CONFIG_RISCV_SMALL_DATA_LIMIT=8

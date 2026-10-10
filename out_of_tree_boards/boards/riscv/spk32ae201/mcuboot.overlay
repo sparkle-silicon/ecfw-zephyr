@@ -1,0 +1,134 @@
+/*
+ * Copyright (c) 2026 Sparkle Silicon Technology Corp., Ltd.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * 引导程序专用 DT overlay —— SPK32AE201 的 SPI Flash 分区表。
+ *
+ * ⚠️ 本文件只被**引导程序构建**加载（bootloadbuild.sh / allbuild.sh 经
+ *    -DDTC_OVERLAY_FILE 注入）。应用侧构建不加载 —— 应用当前不碰 flash。
+ *    将来若应用也需要读分区（如 OTA 自升级要写 slot1），应把 partitions
+ *    一节抽成共享 dtsi，再由两侧共同 include，而不是复制两份。
+ *
+ * ⚠️ 本文件**目前还不能让引导程序构建通过**：分区表只是缺口之一，
+ *    另需 flash 驱动（FLASH_HAS_DRIVER_ENABLED）与 flash-controller 设备本身。
+ *    完整缺口清单见 docs/BOOTLOADER.md §5.6。
+ *
+ * ============================================================
+ * 分区布局（★ 尺寸为建议值，待确认）
+ * ============================================================
+ * SPI flash XIP 窗口共 256 KiB，基址 0x80000
+ * （见 ecfw-work/zephyr_fork/dts/riscv/spksilicon/spk32ae201.dtsi:50-54）。
+ * 下表"偏移"相对 flash 基址，"绝对"是芯片地址空间中的实际地址。
+ *
+ *   偏移       绝对        大小      节点                用途
+ *   0x00000    0x80000     0x10000   boot_partition      引导程序自己
+ *   0x10000    0x90000     0x18000   slot0_partition     应用运行区
+ *   0x28000    0xA8000     0x18000   slot1_partition     应用升级暂存区
+ *                         --------
+ *                         0x40000   = 256 KiB，正好铺满
+ *
+ * 参考量级：应用当前镜像 ≈ 20 KiB / 96 KiB 的槽位；引导程序取 64 KiB 是
+ * **保守上界**（实际体积未测，构建尚未成功）。
+ *
+ * ------------------------------------------------------------
+ * 官方布局依据（2026-10-10 查实）
+ * ------------------------------------------------------------
+ * 权威来源：`资料\103fm_103nto\ROM启动\103NTOFLASH布局及流程图_20250904.pdf` 第 1 页。
+ * 该图给出四列 flash 视图，与本文件直接相关的两条：
+ *
+ *   ① 内部 FLASH 有 0x40000(256 KiB) / 0x80000(512 KiB) 两档 —— 本芯片取 256 KiB，
+ *      故本表三个分区之和恰为 0x40000。
+ *   ② 官方「固件格式」列的结构是：头部FLASH信息(0x00000~0x00100) → 代码段 →
+ *      数据段 → 尾部FLASH信息。即：**官方视角下整块 0x40000 是一份固件**。
+ *
+ *   本文件把同一片区域切成 boot/slot0/slot1 三份，属于**超出官方布局的自定义**。
+ *   能共存的前提是：ROM 只认 flash 基址 0x80000 处的那一份固件（＝引导程序自己），
+ *   跳转进去之后 0x90000 往下由引导程序自行支配，ROM 不再过问。
+ *   详见 docs/BOOTLOADER.md §2.3。
+ *
+ * ⚠️⚠️ 一处**未销账的风险**（可能推翻本表尺寸，改前必读）：
+ *   官方「尾部 FLASH 信息」位于固件末尾，但**未能确证**它是
+ *   「相对固件自身大小」还是「绝对对齐到物理 flash 末尾」。
+ *   若为**后者**，slot1 铺到 0x40000 就会覆盖它 —— 本表必须收缩。
+ *   销账方式：查同目录 `ROM文档v0.1.docx`，或直接问 ROM 负责人。
+ *   在此之前，本表尺寸只能视为**暂定**。
+ *
+ * ------------------------------------------------------------
+ * 为什么**没有** scratch_partition
+ * ------------------------------------------------------------
+ * 这是本文件最容易改错的一处，故写明依据：
+ *
+ *   mcuboot 的 Kconfig（ecfw-work/bootloader/mcuboot/boot/zephyr/Kconfig）规定：
+ *     无 scratch 节点 → BOOT_PREFER_SWAP_MOVE = y（:200-203）
+ *                     → 升级模式 choice 落到 BOOT_SWAP_USING_MOVE（:214）
+ *     有 scratch 节点 → BOOT_PREFER_SWAP_MOVE = n（默认被推翻）
+ *                     → 落到 BOOT_SWAP_USING_SCRATCH（:215）
+ *
+ *   而它自己的 help 文本写着 "Most devices should be using swap move"（:209）
+ *   —— 也就是说，「不加 scratch」正是**官方推荐路径**。
+ *   本 overlay 因此刻意不定义 scratch_partition。
+ *
+ *   注：省下的空间其实不多（scratch 只需放得下最大的一个 flash 扇区，
+ *   典型 4 KiB，见 bootutil/src/swap_scratch.c:238），选 move 主要是取
+ *   推荐路径与更简单的代码路径，而非为省空间。
+ *
+ *   move swap 的限制是「两个槽的所有扇区必须同尺寸」（Kconfig:238-240）；
+ *   统一扇区（典型 4 KiB）的 SPI NOR 不构成障碍。若将来换用异构扇区的
+ *   存储介质，需改为定义 scratch_partition 并复核本段结论。
+ *
+ * ------------------------------------------------------------
+ * ⚠️ 改尺寸前先想清楚的三件事
+ * ------------------------------------------------------------
+ *   ① 三个 reg 必须**首尾相接**，总和恰为 0x40000。留空隙 = 有 flash 区域
+ *      无人认领；重叠 = 两个分区声明同一块地，mcuboot 会静默取其一。
+ *   ② 各分区起止地址须按 **flash 扇区大小对齐**（典型 4 KiB）。不对齐的后果
+ *      是擦写操作越界到相邻分区 —— 而且往往要到实机升级时才暴露。
+ *   ③ 分区表一旦烧进设备，改动它就与已烧录的旧固件**不兼容**，
+ *      必须完整重烧（不能靠 OTA 自己把自己搬过去）。
+ */
+
+/ {
+	chosen {
+		/* mcuboot 的 flash_map_extended.c:21 以
+		 * DT_HAS_CHOSEN(zephyr_flash_controller) 为分支判据；
+		 * 不满足则落到 :38 的硬 #error（见 docs/BOOTLOADER.md §5.6 G3）。
+		 *
+		 * ⚠️ 此处指向 flash0（soc-nv-flash，XIP 窗口）。但仅有 chosen
+		 *    还不够 —— 还必须有能绑定它的 Zephyr flash 驱动（G1），
+		 *    否则 FLASH_HAS_DRIVER_ENABLED 不成立、FLASH_MAP 落空。
+		 *    待驱动落地后复核这一行该指向谁（controller 节点 vs 存储节点）。 */
+		zephyr,flash-controller = &flash0;
+
+		/* 引导程序自身代码所在分区（XIP 定位 .text 用）。
+		 * boot_partition 就在 flash 基址，与默认假设一致，但显式声明更稳。 */
+		zephyr,code-partition = &boot_partition;
+	};
+};
+
+&flash0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/* 引导程序自己。被 ROM 在 0x80000 直接引导（启动件契约同应用侧，
+		 * 见 docs/BOOTLOADER.md §1.2）。 */
+		boot_partition: partition@0 {
+			label = "mcuboot";
+			reg = <0x00000000 0x00010000>;
+		};
+
+		/* 应用运行区。引导程序校验通过后从这里起跑。 */
+		slot0_partition: partition@10000 {
+			label = "image-0";
+			reg = <0x00010000 0x00018000>;
+		};
+
+		/* 应用升级暂存区。新固件先完整写入这里并校验，
+		 * 再由 swap 搬运到 slot0 —— 全程 slot0 保持可用，断电不砖。 */
+		slot1_partition: partition@28000 {
+			label = "image-1";
+			reg = <0x00028000 0x00018000>;
+		};
+	};
+};
